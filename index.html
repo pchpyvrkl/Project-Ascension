@@ -1767,6 +1767,14 @@ function openTaskPanel(taskId){
   catSelect.value = t && t.categoryId ? t.categoryId : '';
   
   onRepeatChange();
+  
+  // For new tasks (not editing), default to today's date if no dates are set
+  if(!taskId && !document.getElementById('tf-startdate').value && !document.getElementById('tf-enddate').value){
+    const today = todayStr();
+    document.getElementById('tf-startdate').value = today;
+    document.getElementById('tf-enddate').value = today;
+  }
+  
   buildColorSwatches(); // Make sure color swatches are built
   document.querySelectorAll('#tf-colors .swatch').forEach(s=> s.classList.toggle('sel', t ? s.dataset.color===t.color : s.dataset.color===COLORS[0]));
   document.querySelectorAll('#tf-weekdays .swatch').forEach(s=>{
