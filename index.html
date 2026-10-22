@@ -1040,7 +1040,9 @@ function taskAppliesOn(task, dateStr){
   if(task.endDate && dateStr > task.endDate) return false;
   const d = parseDate(dateStr);
   const created = parseDate(task.createdAt);
-  if(d < new Date(created.getFullYear(),created.getMonth(),created.getDate())) return false;
+  // Check startDate if set, otherwise use createdAt
+  const effectiveStart = task.startDate ? parseDate(task.startDate) : new Date(created.getFullYear(),created.getMonth(),created.getDate());
+  if(d < effectiveStart) return false;
   const dow = d.getDay();
   switch(task.repeat){
     case 'daily': return true;
@@ -1049,11 +1051,15 @@ function taskAppliesOn(task, dateStr){
     case 'weekly': return (task.weekdays||[]).includes(dow);
     case 'everyx': {
       const n = task.everyx || 2;
-      const diffDays = Math.round((d - created)/86400000);
+      const diffDays = Math.round((d - effectiveStart)/86400000);
       return diffDays>=0 && diffDays % n === 0;
     }
-    case 'monthly': return d.getDate() === created.getDate();
-    case 'once': return task.createdAt === dateStr;
+    case 'monthly': return d.getDate() === effectiveStart.getDate();
+    case 'once': {
+      // For 'once' tasks, check if the date matches startDate (or createdAt if no startDate)
+      const targetDate = task.startDate || task.createdAt;
+      return targetDate === dateStr;
+    }
     default: return false;
   }
 }
@@ -1690,10 +1696,10 @@ function openTaskPanelForDay(){
   document.getElementById('tf-delete').style.display = 'none';
   document.getElementById('tf-name').value = '';
   document.getElementById('tf-xp').value = 0;
-  document.getElementById('tf-repeat').value = 'once'; // Default to 'once' for day-specific tasks
+  document.getElementById('tf-repeat').value = 'daily'; // Default to 'daily' for day-specific tasks
   document.getElementById('tf-everyx').value = 2;
   document.getElementById('tf-startdate').value = activeDayStr || '';
-  document.getElementById('tf-enddate').value = activeDayStr || '';
+  document.getElementById('tf-enddate').value = ''; // Leave endDate empty for repeating tasks
   
   // Populate category dropdown
   const catSelect = document.getElementById('tf-category');
@@ -1746,6 +1752,11 @@ function onRepeatChange(){
   if(r === 'once' && activeDayStr){
     document.getElementById('tf-startdate').value = activeDayStr;
     document.getElementById('tf-enddate').value = activeDayStr;
+  }
+  // If switching from 'once' to a repeating task while in day panel, clear endDate
+  else if(r !== 'once' && activeDayStr){
+    document.getElementById('tf-startdate').value = activeDayStr;
+    document.getElementById('tf-enddate').value = '';
   }
 }
 function openTaskPanel(taskId){
@@ -1800,20 +1811,22 @@ function saveTask(){
     categoryId,
     updatedAt: new Date().toISOString(),
   };
-  
-  // Handle date range for 'once' tasks
-  if(repeat === 'once'){
-    const startDate = document.getElementById('tf-startdate').value;
-    const endDate = document.getElementById('tf-enddate').value;
-    if(startDate) data.startDate = startDate;
-    if(endDate) data.endDate = endDate;
-    // If no dates specified but coming from day panel, use that day
-    if(!startDate && !endDate && activeDayStr){
-      data.startDate = activeDayStr;
+
+  // Handle date range for all tasks
+  const startDate = document.getElementById('tf-startdate').value;
+  const endDate = document.getElementById('tf-enddate').value;
+  if(startDate) data.startDate = startDate;
+  if(endDate) data.endDate = endDate;
+  // If no dates specified but coming from day panel, use that day
+  if(!startDate && !endDate && activeDayStr){
+    data.startDate = activeDayStr;
+    // Only set endDate to the same day if it's a one-time task
+    // For repeating tasks, leave endDate empty so it continues into the future
+    if(repeat === 'once'){
       data.endDate = activeDayStr;
     }
   }
-  
+
   if(activeTaskId){
     Object.assign(state.tasks.find(t=>t.id===activeTaskId), data);
   } else {
