@@ -325,6 +325,254 @@ button{ font-family:inherit; cursor:pointer; }
 .period-btn:hover{ border-color:var(--accent); color:var(--text); }
 .period-btn.active{ background:var(--accent-dim); color:var(--accent); border-color:var(--accent); }
 
+/* Calendar heatmap for XP and % Complete charts */
+.calendar-heatmap-controls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.heatmap-timeframe-btn {
+  padding: 6px 12px;
+  background: var(--bg-elev-2);
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: .15s;
+  position: relative;
+  min-height: 36px;
+  min-width: 36px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.heatmap-timeframe-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.heatmap-timeframe-btn:active {
+  transform: scale(0.98);
+}
+
+.heatmap-timeframe-btn.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.year-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  min-width: 120px;
+  z-index: 100;
+  display: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.year-dropdown.show {
+  display: block;
+}
+
+.year-dropdown-header {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-faint);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.year-dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-base);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.year-dropdown-item:hover {
+  background: var(--bg-elev-2);
+}
+
+.year-dropdown-item.active {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.year-dropdown-item .year-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.year-dropdown-item .year-total {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.activity-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+  contain: layout;
+}
+
+.calendar-month {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.calendar-month-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  width: 100%;
+  max-width: fit-content;
+}
+
+.calendar-month-header .month-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.calendar-month-header .year-label {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-weight: 600;
+}
+
+.calendar-month-header .month-total {
+  font-size: 9px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 28px);
+  gap: 2px;
+  justify-content: flex-start;
+  margin-left: 10px;
+  contain: layout;
+}
+
+.calendar-grid .day-label {
+  text-align: center;
+  font-size: 8px;
+  color: var(--text-faint);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 0;
+}
+
+.calendar-grid .day-cell {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+  background: var(--bg-elev-2);
+  cursor: pointer;
+  transition: background .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-faint);
+  min-width: 24px;
+  min-height: 24px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.day-cell:hover {
+  background: var(--border-strong);
+}
+
+.day-cell:active {
+  transform: scale(0.95);
+}
+
+/* Green levels for activity */
+.day-cell.level-1 { background: rgba(70,180,120,0.3); }
+.day-cell.level-2 { background: rgba(70,180,120,0.5); }
+.day-cell.level-3 { background: rgba(70,180,120,0.7); }
+.day-cell.level-4 { background: rgba(70,180,120,0.85); }
+.day-cell.level-5 { background: #46b478; }
+
+/* Text color for light backgrounds */
+.day-cell.level-4 .day-number,
+.day-cell.level-5 .day-number {
+  color: #000;
+}
+
+.day-number {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-faint);
+}
+
+.calendar-heatmap-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.calendar-heatmap-stat-item {
+  background: var(--bg-elev);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.calendar-heatmap-stat-item .stat-label {
+  font-size: 8px;
+  color: var(--text-faint);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.calendar-heatmap-stat-item .stat-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.calendar-heatmap-stat-item .stat-sub {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-top: 1px;
+}
+
 @media (max-width: 880px){
   #sidebar{ position:fixed; z-index:40; height:100%; transform:translateX(-100%); transition:transform .25s cubic-bezier(.4,0,.2,1); box-shadow:0 0 40px rgba(0,0,0,0.6); }
   #sidebar.open{ transform:translateX(0); }
@@ -588,12 +836,70 @@ button{ font-family:inherit; cursor:pointer; }
         <button class="period-btn" data-period="years" onclick="setAnalyticsPeriod('years')" data-i18n="period.years">Years</button>
       </div>
       <div class="card">
-        <h3 data-i18n="analytics.currentmonth">% Complete Chart</h3>
-        <div id="current-month-bars"></div>
+        <h3 data-i18n="analytics.currentmonth">% Complete Calendar</h3>
+        <div class="calendar-heatmap-controls">
+          <button class="heatmap-timeframe-btn active" data-timeframe="month" onclick="setHeatmapTimeframe('pct', 'month')">Month</button>
+          <button class="heatmap-timeframe-btn" data-timeframe="year" onclick="toggleYearDropdown('pct', event)">Year
+            <div class="year-dropdown" id="pct-year-dropdown"></div>
+          </button>
+          <button class="heatmap-timeframe-btn" data-timeframe="total" onclick="setHeatmapTimeframe('pct', 'total')">Total</button>
+        </div>
+        <div class="calendar-heatmap-stats" id="pct-heatmap-stats">
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Total</div>
+            <div class="stat-value" id="pct-cal-total">0%</div>
+            <div class="stat-sub" id="pct-cal-total-days">0 days</div>
+          </div>
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Avg</div>
+            <div class="stat-value" id="pct-cal-avg">0%</div>
+            <div class="stat-sub" id="pct-cal-avg-days">0 days</div>
+          </div>
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Best Day</div>
+            <div class="stat-value" id="pct-cal-best">0%</div>
+            <div class="stat-sub" id="pct-cal-best-date">--</div>
+          </div>
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Active Days</div>
+            <div class="stat-value" id="pct-cal-active">0</div>
+            <div class="stat-sub" id="pct-cal-total-days-display">0 total</div>
+          </div>
+        </div>
+        <div class="activity-calendar" id="pct-heatmap-calendar"></div>
       </div>
       <div class="card">
-        <h3 data-i18n="analytics.currentmonthxp">XP Chart</h3>
-        <div id="current-month-xp-bars"></div>
+        <h3 data-i18n="analytics.currentmonthxp">XP Calendar</h3>
+        <div class="calendar-heatmap-controls">
+          <button class="heatmap-timeframe-btn active" data-timeframe="month" onclick="setHeatmapTimeframe('xp', 'month')">Month</button>
+          <button class="heatmap-timeframe-btn" data-timeframe="year" onclick="toggleYearDropdown('xp', event)">Year
+            <div class="year-dropdown" id="xp-year-dropdown"></div>
+          </button>
+          <button class="heatmap-timeframe-btn" data-timeframe="total" onclick="setHeatmapTimeframe('xp', 'total')">Total</button>
+        </div>
+        <div class="calendar-heatmap-stats" id="xp-heatmap-stats">
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Total XP</div>
+            <div class="stat-value" id="xp-cal-total">0</div>
+            <div class="stat-sub" id="xp-cal-total-days">0 days</div>
+          </div>
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Avg XP</div>
+            <div class="stat-value" id="xp-cal-avg">0</div>
+            <div class="stat-sub" id="xp-cal-avg-days">0 days</div>
+          </div>
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Best Day</div>
+            <div class="stat-value" id="xp-cal-best">0</div>
+            <div class="stat-sub" id="xp-cal-best-date">--</div>
+          </div>
+          <div class="calendar-heatmap-stat-item">
+            <div class="stat-label">Active Days</div>
+            <div class="stat-value" id="xp-cal-active">0</div>
+            <div class="stat-sub" id="xp-cal-total-days-display">0 total</div>
+          </div>
+        </div>
+        <div class="activity-calendar" id="xp-heatmap-calendar"></div>
       </div>
       <div class="card">
         <h3 data-i18n="analytics.scatterplot">XP vs % Complete Scatter Plot</h3>
@@ -1143,11 +1449,11 @@ function computeBestRecords(){
     const ds = fmtDate(c);
     const s = dayStats(ds);
     
-    if(s.pct > bestPct.pct && s.total > 0){
+    if(s.pct > bestPct.pct){
       bestPct = { pct: s.pct, date: ds };
     }
     
-    if(s.xp > bestXP.xp && s.total > 0){
+    if(s.xp > bestXP.xp){
       bestXP = { xp: s.xp, date: ds };
     }
   }
@@ -1978,7 +2284,12 @@ function renderAnalytics(){
   const today = new Date();
   const todayDs = todayStr();
   const todayStats = dayStats(todayDs);
-  const created = parseDate(state.createdAt || todayStr());
+  
+  // Use the earliest date from logs or createdAt, whichever is earlier
+  const createdFromLogs = Object.keys(state.logs || {}).length > 0 
+    ? Object.keys(state.logs).reduce((min, date) => date < min ? date : min)
+    : null;
+  const created = createdFromLogs ? parseDate(createdFromLogs) : parseDate(state.createdAt || todayStr());
   
   // Get all days from account creation to today (all-time data for statistics)
   const allDaysList = [];
@@ -2014,13 +2325,11 @@ function renderAnalytics(){
   const monthData = {};
   allDaysList.forEach(ds => {
     const s = dayStats(ds);
-    if(s.total > 0){
-      const d = parseDate(ds);
-      const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
-      if(!monthData[monthKey]) monthData[monthKey] = { totalPct: 0, count: 0 };
-      monthData[monthKey].totalPct += s.pct;
-      monthData[monthKey].count++;
-    }
+    const d = parseDate(ds);
+    const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
+    if(!monthData[monthKey]) monthData[monthKey] = { totalPct: 0, count: 0 };
+    monthData[monthKey].totalPct += s.pct;
+    monthData[monthKey].count++;
   });
   let bestMonthKey = null;
   let bestMonthAvg = -1;
@@ -2088,13 +2397,11 @@ function renderAnalytics(){
       // For days: show daily data (all-time)
       allDaysList.forEach(ds => {
         const s = dayStats(ds);
-        if(s.total > 0){ // Only include days with tasks
-          dataPoints.push({
-            date: ds,
-            xp: s.xp,
-            pct: s.pct
-          });
-        }
+        dataPoints.push({
+          date: ds,
+          xp: s.xp,
+          pct: s.pct
+        });
       });
     } else if(analyticsPeriod === 'month'){
       // For month: show only current month data
@@ -2106,29 +2413,25 @@ function renderAnalytics(){
         if(c > today) break;
         const ds = fmtDate(c);
         const s = dayStats(ds);
-        if(s.total > 0){
-          dataPoints.push({
-            date: ds,
-            xp: s.xp,
-            pct: s.pct
-          });
-        }
+        dataPoints.push({
+          date: ds,
+          xp: s.xp,
+          pct: s.pct
+        });
       }
     } else if(analyticsPeriod === 'months'){
       // For months: aggregate by month
       const monthData = {};
       allDaysList.forEach(ds => {
         const s = dayStats(ds);
-        if(s.total > 0){
-          const d = parseDate(ds);
-          const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
-          if(!monthData[monthKey]){
-            monthData[monthKey] = { totalXP: 0, totalPct: 0, count: 0 };
-          }
-          monthData[monthKey].totalXP += s.xp;
-          monthData[monthKey].totalPct += s.pct;
-          monthData[monthKey].count++;
+        const d = parseDate(ds);
+        const monthKey = `${d.getFullYear()}-${d.getMonth()}`;
+        if(!monthData[monthKey]){
+          monthData[monthKey] = { totalXP: 0, totalPct: 0, count: 0 };
         }
+        monthData[monthKey].totalXP += s.xp;
+        monthData[monthKey].totalPct += s.pct;
+        monthData[monthKey].count++;
       });
       
       Object.keys(monthData).forEach(monthKey => {
@@ -2147,16 +2450,14 @@ function renderAnalytics(){
       const yearData = {};
       allDaysList.forEach(ds => {
         const s = dayStats(ds);
-        if(s.total > 0){
-          const d = parseDate(ds);
-          const yearKey = d.getFullYear();
-          if(!yearData[yearKey]){
-            yearData[yearKey] = { totalXP: 0, totalPct: 0, count: 0 };
-          }
-          yearData[yearKey].totalXP += s.xp;
-          yearData[yearKey].totalPct += s.pct;
-          yearData[yearKey].count++;
+        const d = parseDate(ds);
+        const yearKey = d.getFullYear();
+        if(!yearData[yearKey]){
+          yearData[yearKey] = { totalXP: 0, totalPct: 0, count: 0 };
         }
+        yearData[yearKey].totalXP += s.xp;
+        yearData[yearKey].totalPct += s.pct;
+        yearData[yearKey].count++;
       });
       
       Object.keys(yearData).forEach(yearKey => {
@@ -2620,17 +2921,11 @@ function renderAnalytics(){
     hm.appendChild(yearContainer);
   });
 
-  // % Complete chart - respect selected period
-  const barsContainer = document.getElementById('current-month-bars');
-  if(barsContainer){
-    renderPeriodChart(barsContainer, 'pct', analyticsPeriod, today, created);
-  }
+  // % Complete heatmap
+  renderCalendarHeatmap('pct');
 
-  // XP chart - respect selected period
-  const xpBarsContainer = document.getElementById('current-month-xp-bars');
-  if(xpBarsContainer){
-    renderPeriodChart(xpBarsContainer, 'xp', analyticsPeriod, today, created);
-  }
+  // XP heatmap
+  renderCalendarHeatmap('xp');
 }
 
 function renderPeriodChart(container, chartType, period, today, created){
@@ -2845,6 +3140,313 @@ function renderPeriodChart(container, chartType, period, today, created){
   });
   
   container.appendChild(chartWrapper);
+}
+
+// Calendar heatmap functions for XP and % Complete
+let heatmapTimeframe = { pct: 'month', xp: 'month' };
+let selectedYear = { pct: null, xp: null };
+
+function setHeatmapTimeframe(chartType, timeframe) {
+  heatmapTimeframe[chartType] = timeframe;
+  
+  // Update button states
+  const containerId = chartType === 'pct' ? 'pct-heatmap-calendar' : 'xp-heatmap-calendar';
+  const container = document.getElementById(containerId);
+  if (container) {
+    const buttons = container.parentElement.querySelectorAll('.heatmap-timeframe-btn');
+    buttons.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.timeframe === timeframe);
+    });
+  }
+  
+  renderCalendarHeatmap(chartType);
+}
+
+function toggleYearDropdown(chartType, event) {
+  event.stopPropagation();
+  const dropdownId = `${chartType}-year-dropdown`;
+  const dropdown = document.getElementById(dropdownId);
+  if (!dropdown) return;
+
+  // Close other dropdowns
+  document.querySelectorAll('.year-dropdown').forEach(dd => {
+    if (dd.id !== dropdownId) dd.classList.remove('show');
+  });
+
+  // Toggle current dropdown
+  const isOpen = dropdown.classList.contains('show');
+  dropdown.classList.toggle('show');
+
+  if (!isOpen) {
+    populateYearDropdown(chartType);
+  }
+}
+
+function populateYearDropdown(chartType) {
+  const dropdownId = `${chartType}-year-dropdown`;
+  const dropdown = document.getElementById(dropdownId);
+  if (!dropdown) return;
+
+  const today = new Date();
+  const created = parseDate(state.createdAt || todayStr());
+  const startYear = created.getFullYear();
+  const currentYear = today.getFullYear();
+
+  // Calculate available years
+  const years = [];
+  for (let year = startYear; year <= currentYear; year++) {
+    years.push(year);
+  }
+
+  // Build dropdown content
+  let html = '<div class="year-dropdown-header">Select Year</div>';
+  years.forEach(year => {
+    const isActive = selectedYear[chartType] === year || (selectedYear[chartType] === null && year === currentYear);
+    html += `
+      <div class="year-dropdown-item ${isActive ? 'active' : ''}" onclick="selectYear('${chartType}', ${year})">
+        <span class="year-text">${year}</span>
+      </div>
+    `;
+  });
+
+  dropdown.innerHTML = html;
+}
+
+function selectYear(chartType, year) {
+  selectedYear[chartType] = year;
+  setHeatmapTimeframe(chartType, 'year');
+
+  // Close dropdown
+  const dropdownId = `${chartType}-year-dropdown`;
+  const dropdown = document.getElementById(dropdownId);
+  if (dropdown) dropdown.classList.remove('show');
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', () => {
+  document.querySelectorAll('.year-dropdown').forEach(dd => {
+    dd.classList.remove('show');
+  });
+});
+
+function renderCalendarHeatmap(chartType) {
+  const calendar = document.getElementById(chartType === 'pct' ? 'pct-heatmap-calendar' : 'xp-heatmap-calendar');
+  if (!calendar) return;
+  
+  calendar.innerHTML = '';
+  
+  const today = new Date();
+  const created = parseDate(state.createdAt || todayStr());
+  const timeframe = heatmapTimeframe[chartType];
+  
+  let startDate, endDate;
+
+  switch (timeframe) {
+    case 'month':
+      startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      break;
+    case 'year':
+      const yearToUse = selectedYear[chartType] || today.getFullYear();
+      startDate = new Date(yearToUse, 0, 1);
+      endDate = yearToUse === today.getFullYear() ? today : new Date(yearToUse, 11, 31);
+      break;
+    case 'total':
+      startDate = created;
+      endDate = today;
+      break;
+    default:
+      startDate = new Date(today.getFullYear(), today.getMonth(), 1);
+      endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  }
+
+  // Ensure start date is not before account creation
+  if (startDate < created) {
+    startDate = new Date(created);
+  }
+
+  // Ensure end date is not after today
+  if (endDate > today) {
+    endDate = new Date(today);
+  }
+  
+  // Group by month
+  const monthGroups = {};
+  let currentDate = new Date(startDate);
+  
+  while (currentDate <= endDate) {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const key = `${year}-${month}`;
+    
+    if (!monthGroups[key]) {
+      monthGroups[key] = {
+        year,
+        month,
+        days: []
+      };
+    }
+    
+    monthGroups[key].days.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  
+  // Get daily data
+  const dailyData = {};
+  const allDaysList = [];
+  for (const c = new Date(startDate); c <= endDate; c.setDate(c.getDate() + 1)) {
+    const ds = fmtDate(c);
+    allDaysList.push(ds);
+    const s = dayStats(ds);
+    dailyData[ds] = {
+      value: chartType === 'pct' ? s.pct : s.xp,
+      total: s.total,
+      done: s.done
+    };
+  }
+  
+  // Calculate max value for color scaling
+  const values = Object.values(dailyData).map(d => d.value);
+  const maxValue = Math.max(...values, 1);
+  
+  // Render each month
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  
+  Object.keys(monthGroups).sort().forEach(key => {
+    const group = monthGroups[key];
+    const monthDiv = document.createElement('div');
+    monthDiv.className = 'calendar-month';
+    
+    // Month header
+    const header = document.createElement('div');
+    header.className = 'calendar-month-header';
+    
+    const monthLabel = document.createElement('div');
+    monthLabel.className = 'month-label';
+    monthLabel.textContent = monthNames[group.month];
+    header.appendChild(monthLabel);
+    
+    const yearLabel = document.createElement('div');
+    yearLabel.className = 'year-label';
+    yearLabel.textContent = group.year;
+    header.appendChild(yearLabel);
+    
+    // Calculate total for this month
+    let monthTotal = 0;
+    group.days.forEach(date => {
+      const dateStr = fmtDate(date);
+      monthTotal += dailyData[dateStr] ? dailyData[dateStr].value : 0;
+    });
+    
+    const monthTotalLabel = document.createElement('div');
+    monthTotalLabel.className = 'month-total';
+    monthTotalLabel.textContent = chartType === 'pct' ? Math.round(monthTotal / group.days.length) + '%' : Math.round(monthTotal);
+    header.appendChild(monthTotalLabel);
+    
+    monthDiv.appendChild(header);
+    
+    // Single grid for both labels and cells
+    const grid = document.createElement('div');
+    grid.className = 'calendar-grid';
+    
+    // Add day labels as first row
+    dayNames.forEach(day => {
+      const label = document.createElement('div');
+      label.className = 'day-label';
+      label.textContent = day;
+      grid.appendChild(label);
+    });
+    
+    // Add empty cells for alignment
+    const firstDayOfWeek = group.days[0].getDay();
+    for (let i = 0; i < firstDayOfWeek; i++) {
+      const emptyCell = document.createElement('div');
+      emptyCell.className = 'day-cell';
+      emptyCell.style.visibility = 'hidden';
+      emptyCell.style.pointerEvents = 'none';
+      emptyCell.style.width = '30px';
+      emptyCell.style.height = '30px';
+      grid.appendChild(emptyCell);
+    }
+    
+    // Add actual days
+    group.days.forEach(date => {
+      const cell = document.createElement('div');
+      cell.className = 'day-cell';
+      const dateStr = fmtDate(date);
+      const data = dailyData[dateStr] || { value: 0 };
+      
+      // Add color level based on value
+      if (data.value > 0) {
+        const level = Math.ceil((data.value / maxValue) * 5);
+        cell.classList.add(`level-${Math.min(level, 5)}`);
+      }
+      
+      // Add date number
+      const dayNumber = document.createElement('span');
+      dayNumber.className = 'day-number';
+      dayNumber.textContent = date.getDate();
+      cell.appendChild(dayNumber);
+      
+      // Add tooltip
+      cell.title = `${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}\n${chartType === 'pct' ? 'Completion' : 'XP'}: ${data.value}${chartType === 'pct' ? '%' : ''}\nTasks: ${data.done}/${data.total}`;
+      
+      grid.appendChild(cell);
+    });
+    
+    monthDiv.appendChild(grid);
+    calendar.appendChild(monthDiv);
+  });
+  
+  // Update stats
+  updateHeatmapStats(chartType, dailyData, startDate, endDate);
+}
+
+function updateHeatmapStats(chartType, dailyData, startDate, endDate) {
+  const prefix = chartType === 'pct' ? 'pct' : 'xp';
+  
+  let total = 0;
+  let activeDays = 0;
+  let bestDay = { date: null, value: 0 };
+  const totalDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+  
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    const dateStr = fmtDate(d);
+    const data = dailyData[dateStr] || { value: 0, total: 0, done: 0 };
+    
+    // Include ALL days in total calculation
+    total += data.value;
+    
+    // Track active days (days with value > 0)
+    if (data.value > 0) {
+      activeDays++;
+      
+      if (data.value > bestDay.value) {
+        bestDay = { date: dateStr, value: data.value };
+      }
+    }
+  }
+  
+  // Update stats display - use ALL days for total/average calculations
+  document.getElementById(`${prefix}-cal-total`).textContent = chartType === 'pct' ? Math.round(total / totalDays) + '%' : Math.round(total);
+  document.getElementById(`${prefix}-cal-total-days`).textContent = totalDays + ' days';
+  
+  const avg = totalDays > 0 ? total / totalDays : 0;
+  document.getElementById(`${prefix}-cal-avg`).textContent = chartType === 'pct' ? Math.round(avg) + '%' : Math.round(avg);
+  document.getElementById(`${prefix}-cal-avg-days`).textContent = totalDays + ' days';
+  
+  if (bestDay.date) {
+    const bestDate = parseDate(bestDay.date);
+    document.getElementById(`${prefix}-cal-best`).textContent = chartType === 'pct' ? Math.round(bestDay.value) + '%' : Math.round(bestDay.value);
+    document.getElementById(`${prefix}-cal-best-date`).textContent = bestDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } else {
+    document.getElementById(`${prefix}-cal-best`).textContent = '0';
+    document.getElementById(`${prefix}-cal-best-date`).textContent = '--';
+  }
+  
+  document.getElementById(`${prefix}-cal-active`).textContent = activeDays;
+  document.getElementById(`${prefix}-cal-total-days-display`).textContent = totalDays + ' total';
 }
 
 /* ---------- Panels ---------- */
