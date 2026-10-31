@@ -1346,8 +1346,11 @@ function taskAppliesOn(task, dateStr){
   if(task.endDate && dateStr > task.endDate) return false;
   const d = parseDate(dateStr);
   const created = parseDate(task.createdAt);
-  // Check startDate if set, otherwise use createdAt
-  const effectiveStart = task.startDate ? parseDate(task.startDate) : new Date(created.getFullYear(),created.getMonth(),created.getDate());
+  // Use the earlier of startDate or createdAt as effective start date
+  // This ensures tasks appear on the day they were created even if startDate is set to a future date
+  const startDateDate = task.startDate ? parseDate(task.startDate) : new Date(created.getFullYear(),created.getMonth(),created.getDate());
+  const effectiveStart = created < startDateDate ? created : startDateDate;
+  console.log('taskAppliesOn:', task.name, 'dateStr:', dateStr, 'effectiveStart:', fmtDate(effectiveStart), 'd:', fmtDate(d), 'd < effectiveStart:', d < effectiveStart);
   if(d < effectiveStart) return false;
   const dow = d.getDay();
   switch(task.repeat){
@@ -2053,15 +2056,15 @@ function onRepeatChange(){
   document.getElementById('tf-weekly-wrap').style.display = r==='weekly' ? 'block':'none';
   document.getElementById('tf-everyx-wrap').style.display = r==='everyx' ? 'block':'none';
   document.getElementById('tf-dates-wrap').style.display = r==='once' ? 'block':'none';
-  
+
   // If 'once' is selected and we have an active day, pre-fill the dates
   if(r === 'once' && activeDayStr){
     document.getElementById('tf-startdate').value = activeDayStr;
     document.getElementById('tf-enddate').value = activeDayStr;
   }
-  // If switching from 'once' to a repeating task while in day panel, clear endDate
-  else if(r !== 'once' && activeDayStr){
-    document.getElementById('tf-startdate').value = activeDayStr;
+  // If switching to a repeating task (not 'once'), always clear endDate
+  // so the task continues indefinitely
+  else if(r !== 'once'){
     document.getElementById('tf-enddate').value = '';
   }
 }
@@ -2072,7 +2075,7 @@ function openTaskPanel(taskId){
   const t = taskId ? state.tasks.find(x=>x.id===taskId) : null;
   document.getElementById('tf-name').value = t ? t.name : '';
   document.getElementById('tf-xp').value = t ? t.xp : 0;
-  document.getElementById('tf-repeat').value = t ? t.repeat : 'once';
+  document.getElementById('tf-repeat').value = t ? t.repeat : 'daily'; // Default to 'daily' for new tasks
   document.getElementById('tf-everyx').value = t && t.everyx ? t.everyx : 2;
   document.getElementById('tf-startdate').value = t && t.startDate ? t.startDate : '';
   document.getElementById('tf-enddate').value = t && t.endDate ? t.endDate : '';
@@ -2086,10 +2089,10 @@ function openTaskPanel(taskId){
   onRepeatChange();
   
   // For new tasks (not editing), default to today's date if no dates are set
-  if(!taskId && !document.getElementById('tf-startdate').value && !document.getElementById('tf-enddate').value){
+  // Only set startDate, not endDate - endDate should be empty for repeating tasks
+  if(!taskId && !document.getElementById('tf-startdate').value){
     const today = todayStr();
     document.getElementById('tf-startdate').value = today;
-    document.getElementById('tf-enddate').value = today;
   }
   
   buildColorSwatches(); // Make sure color swatches are built
@@ -2122,22 +2125,32 @@ function saveTask(){
   const startDate = document.getElementById('tf-startdate').value;
   const endDate = document.getElementById('tf-enddate').value;
   if(startDate) data.startDate = startDate;
-  if(endDate) data.endDate = endDate;
-  // If no dates specified but coming from day panel, use that day
-  if(!startDate && !endDate && activeDayStr){
-    data.startDate = activeDayStr;
-    // Only set endDate to the same day if it's a one-time task
-    // For repeating tasks, leave endDate empty so it continues into the future
-    if(repeat === 'once'){
-      data.endDate = activeDayStr;
-    }
+  // Only set endDate if it's explicitly set AND it's a one-time task
+  // For all repeating tasks, ensure endDate is never set
+  if(repeat === 'once' && endDate){
+    data.endDate = endDate;
+  } else if(repeat !== 'once'){
+    // Clear endDate for all repeating tasks
+    data.endDate = undefined;
+  } else if(endDate){
+    data.endDate = endDate;
   }
+
+  // If no startDate specified, use today
+  if(!data.startDate){
+    data.startDate = todayStr();
+  }
+
+  console.log('saveTask - data to save:', data);
+  console.log('saveTask - startDate:', startDate, 'endDate:', endDate, 'repeat:', repeat);
 
   if(activeTaskId){
     Object.assign(state.tasks.find(t=>t.id===activeTaskId), data);
   } else {
     const maxOrder = state.tasks.reduce((m,t)=>Math.max(m, t.order||0), -1);
-    state.tasks.push({ id: uid(), active:true, deleted:false, order: maxOrder+1, createdAt: todayStr(), ...data });
+    const newTask = { id: uid(), active:true, deleted:false, order: maxOrder+1, createdAt: todayStr(), ...data };
+    console.log('saveTask - new task created:', newTask);
+    state.tasks.push(newTask);
   }
   saveState();
   closeAllPanels();
