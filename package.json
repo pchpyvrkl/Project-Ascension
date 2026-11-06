@@ -1,0 +1,11 @@
+{
+  "name": "project-ascension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal consistency OS — habit tracker with XP, calendar, and analytics",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}
